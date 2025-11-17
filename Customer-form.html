@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Validation - SuitUp</title>
+    <link rel="icon" href="log.png">
+    <link rel="stylesheet" href="styel.css">
+    <style>
+        /* Additional styles for the form */
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-secondary {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #636e70;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .auth-buttons .btn {
+            flex: 1;
+        }
+        
+        .login-form, .signup-form {
+            display: none;
+        }
+        
+        .active-form {
+            display: block;
+        }
+        
+        .form-switcher {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .form-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .form-tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .back-to-home {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SuitUp - Customer Validation</h1>
+    </header>
+    
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="menu.html">Suits</a>
+        <a href="About.html">About</a>
+        <a href="Contact.html">Contact</a>
+        <a href="Help.html">Help</a>
+        <a href="customer-form.html" class="active">Customer Form</a>
+    </nav>
+    
+    <div class="container">
+        <div class="form-container">
+            <h2 class="form-title">Customer Validation</h2>
+            
+            <!-- Form Tabs -->
+            <div class="form-switcher">
+                <button class="form-tab active" id="customerFormTab">Customer Form</button>
+                <button class="form-tab" id="loginTab">Login</button>
+                <button class="form-tab" id="signupTab">Sign Up</button>
+            </div>
+            
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage">
+                Thank you! Your information has been submitted successfully.
+            </div>
+            
+            <!-- Customer Information Form -->
+            <form id="customerForm" class="active-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
+                    <div class="error-message" id="fullNameError">Please enter a valid full name (minimum 2 characters)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email address" required>
+                    <div class="error-message" id="emailError">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number" required>
+                    <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" class="form-control" placeholder="Enter your full address" rows="3" required></textarea>
+                    <div class="error-message" id="addressError">Please enter your address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="suitPreference">Suit Preference</label>
+                    <select id="suitPreference" class="form-control" required>
+                        <option value="">Select your preferred suit style</option>
+                        <option value="classic">Classic</option>
+                        <option value="modern">Modern</option>
+                        <option value="slim-fit">Slim Fit</option>
+                        <option value="double-breasted">Double-Breasted</option>
+                        <option value="tuxedo">Tuxedo</option>
+                    </select>
+                    <div class="error-message" id="suitPreferenceError">Please select a suit preference</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="budget">Budget Range</label>
+                    <select id="budget" class="form-control" required>
+                        <option value="">Select your budget range</option>
+                        <option value="under-500">Under $500</option>
+                        <option value="500-1000">$500 - $1000</option>
+                        <option value="1000-2000">$1000 - $2000</option>
+                        <option value="over-2000">Over $2000</option>
+                    </select>
+                    <div class="error-message" id="budgetError">Please select a budget range</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventType">Event Type</label>
+                    <input type="text" id="eventType" class="form-control" placeholder="e.g., Wedding, Business Meeting, etc." required>
+                    <div class="error-message" id="eventTypeError">Please enter the event type</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="additionalInfo">Additional Information</label>
+                    <textarea id="additionalInfo" class="form-control" placeholder="Any additional requirements or preferences" rows="4"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-block">Submit Information</button>
+            </form>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email address" required>
+                    <div class="error-message" id="loginEmailError">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                    <div class="error-message" id="loginPasswordError">Please enter your password</div>
+                </div>
+                
+                <button type="submit" class="btn btn-block">Login</button>
+            </form>
+            
+            <!-- Sign Up Form -->
+            <form id="signupForm" class="signup-form">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" class="form-control" placeholder="Enter your full name" required>
+                    <div class="error-message" id="signupNameError">Please enter a valid full name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" class="form-control" placeholder="Enter your email address" required>
+                    <div class="error-message" id="signupEmailError">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" class="form-control" placeholder="Create a password" required>
+                    <div class="error-message" id="signupPasswordError">Password must be at least 8 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                    <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+                </div>
+                
+                <button type="submit" class="btn btn-block">Sign Up</button>
+            </form>
+            
+            <div class="back-to-home">
+                <a href="index.html" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const customerFormTab = document.getElementById('customerFormTab');
+            const loginTab = document.getElementById('loginTab');
+            const signupTab = document.getElementById('signupTab');
+            const customerForm = document.getElementById('customerForm');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            
+            customerFormTab.addEventListener('click', function() {
+                showForm(customerForm);
+                setActiveTab(customerFormTab);
+            });
+            
+            loginTab.addEventListener('click', function() {
+                showForm(loginForm);
+                setActiveTab(loginTab);
+            });
+            
+            signupTab.addEventListener('click', function() {
+                showForm(signupForm);
+                setActiveTab(signupTab);
+            });
+            
+            function showForm(form) {
+                // Hide all forms
+                customerForm.classList.remove('active-form');
+                loginForm.classList.remove('active-form');
+                signupForm.classList.remove('active-form');
+                
+                // Show the selected form
+                form.classList.add('active-form');
+            }
+            
+            function setActiveTab(tab) {
+                // Remove active class from all tabs
+                customerFormTab.classList.remove('active');
+                loginTab.classList.remove('active');
+                signupTab.classList.remove('active');
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+            }
+            
+            // Customer Form Validation and Submission
+            const customerFormElement = document.getElementById('customerForm');
+            customerFormElement.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateCustomerForm()) {
+                    submitCustomerForm();
+                }
+            });
+            
+            // Login Form Validation and Submission
+            const loginFormElement = document.getElementById('loginForm');
+            loginFormElement.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateLoginForm()) {
+                    submitLoginForm();
+                }
+            });
+            
+            // Sign Up Form Validation and Submission
+            const signupFormElement = document.getElementById('signupForm');
+            signupFormElement.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateSignupForm()) {
+                    submitSignupForm();
+                }
+            });
+            
+            // Customer Form Validation
+            function validateCustomerForm() {
+                let isValid = true;
+                
+                // Full Name validation
+                const fullName = document.getElementById('fullName').value.trim();
+                if (fullName.length < 2) {
+                    showError('fullNameError');
+                    isValid = false;
+                } else {
+                    hideError('fullNameError');
+                }
+                
+                // Email validation
+                const email = document.getElementById('email').value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showError('emailError');
+                    isValid = false;
+                } else {
+                    hideError('emailError');
+                }
+                
+                // Phone validation
+                const phone = document.getElementById('phone').value.trim();
+                const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+                if (!phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''))) {
+                    showError('phoneError');
+                    isValid = false;
+                } else {
+                    hideError('phoneError');
+                }
+                
+                // Address validation
+                const address = document.getElementById('address').value.trim();
+                if (address.length < 5) {
+                    showError('addressError');
+                    isValid = false;
+                } else {
+                    hideError('addressError');
+                }
+                
+                // Suit Preference validation
+                const suitPreference = document.getElementById('suitPreference').value;
+                if (!suitPreference) {
+                    showError('suitPreferenceError');
+                    isValid = false;
+                } else {
+                    hideError('suitPreferenceError');
+                }
+                
+                // Budget validation
+                const budget = document.getElementById('budget').value;
+                if (!budget) {
+                    showError('budgetError');
+                    isValid = false;
+                } else {
+                    hideError('budgetError');
+                }
+                
+                // Event Type validation
+                const eventType = document.getElementById('eventType').value.trim();
+                if (eventType.length < 2) {
+                    showError('eventTypeError');
+                    isValid = false;
+                } else {
+                    hideError('eventTypeError');
+                }
+                
+                return isValid;
+            }
+            
+            // Login Form Validation
+            function validateLoginForm() {
+                let isValid = true;
+                
+                // Email validation
+                const email = document.getElementById('loginEmail').value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showError('loginEmailError');
+                    isValid = false;
+                } else {
+                    hideError('loginEmailError');
+                }
+                
+                // Password validation
+                const password = document.getElementById('loginPassword').value;
+                if (password.length < 1) {
+                    showError('loginPasswordError');
+                    isValid = false;
+                } else {
+                    hideError('loginPasswordError');
+                }
+                
+                return isValid;
+            }
+            
+            // Sign Up Form Validation
+            function validateSignupForm() {
+                let isValid = true;
+                
+                // Name validation
+                const name = document.getElementById('signupName').value.trim();
+                if (name.length < 2) {
+                    showError('signupNameError');
+                    isValid = false;
+                } else {
+                    hideError('signupNameError');
+                }
+                
+                // Email validation
+                const email = document.getElementById('signupEmail').value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showError('signupEmailError');
+                    isValid = false;
+                } else {
+                    hideError('signupEmailError');
+                }
+                
+                // Password validation
+                const password = document.getElementById('signupPassword').value;
+                if (password.length < 8) {
+                    showError('signupPasswordError');
+                    isValid = false;
+                } else {
+                    hideError('signupPasswordError');
+                }
+                
+                // Confirm Password validation
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                if (password !== confirmPassword) {
+                    showError('confirmPasswordError');
+                    isValid = false;
+                } else {
+                    hideError('confirmPasswordError');
+                }
+                
+                return isValid;
+            }
+            
+            // Show error message
+            function showError(errorId) {
+                document.getElementById(errorId).style.display = 'block';
+            }
+            
+            // Hide error message
+            function hideError(errorId) {
+                document.getElementById(errorId).style.display = 'none';
+            }
+            
+            // AJAX Form Submission for Customer Form
+            function submitCustomerForm() {
+                const formData = {
+                    fullName: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    suitPreference: document.getElementById('suitPreference').value,
+                    budget: document.getElementById('budget').value,
+                    eventType: document.getElementById('eventType').value,
+                    additionalInfo: document.getElementById('additionalInfo').value
+                };
+                
+                // Simulate AJAX request
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'https://jsonplaceholder.typicode.com/posts', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 201) {
+                            // Success
+                            document.getElementById('successMessage').style.display = 'block';
+                            customerFormElement.reset();
+                            
+                            // Redirect to home page after 2 seconds
+                            setTimeout(function() {
+                                window.location.href = 'index.html';
+                            }, 2000);
+                        } else {
+                            // Error
+                            alert('There was an error submitting your information. Please try again.');
+                        }
+                    }
+                };
+                
+                xhr.send(JSON.stringify(formData));
+            }
+            
+            // Login Form Submission
+            function submitLoginForm() {
+                const formData = {
+                    email: document.getElementById('loginEmail').value,
+                    password: document.getElementById('loginPassword').value
+                };
+                
+                // Simulate AJAX request
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'https://jsonplaceholder.typicode.com/posts', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 201) {
+                            // Success
+                            alert('Login successful! Redirecting to home page...');
+                            loginFormElement.reset();
+                            
+                            // Redirect to home page
+                            window.location.href = 'index.html';
+                        } else {
+                            // Error
+                            alert('Login failed. Please check your credentials and try again.');
+                        }
+                    }
+                };
+                
+                xhr.send(JSON.stringify(formData));
+            }
+            
+            // Sign Up Form Submission
+            function submitSignupForm() {
+                const formData = {
+                    name: document.getElementById('signupName').value,
+                    email: document.getElementById('signupEmail').value,
+                    password: document.getElementById('signupPassword').value
+                };
+                
+                // Simulate AJAX request
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'https://jsonplaceholder.typicode.com/posts', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 201) {
+                            // Success
+                            alert('Account created successfully! You can now login.');
+                            signupFormElement.reset();
+                            
+                            // Switch to login form
+                            showForm(loginForm);
+                            setActiveTab(loginTab);
+                        } else {
+                            // Error
+                            alert('There was an error creating your account. Please try again.');
+                        }
+                    }
+                };
+                
+                xhr.send(JSON.stringify(formData));
+            }
+        });
+    </script>
+</body>
+</html>
